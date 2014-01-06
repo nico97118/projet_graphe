@@ -21,7 +21,7 @@ int main(int argc, const char * argv[])
     Graphe ordo(&source);
     ordo.detectCircuit();
     ordo.print_graph();
-    
+    cout<<ordo.earlyDate(4);
 
     
     return 0;
