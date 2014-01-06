@@ -17,6 +17,14 @@ int max(vector<int> valeurs)
             max = *it;
     return max;
 }
+int min(vector<int> valeurs)
+{
+    int min = 999999;
+    for(vector<int>::iterator it(valeurs.begin());it != valeurs.end();it++)
+        if(*it <= min)
+            min = *it;
+    return min;
+}
 
 Graphe::Graphe(int nsommet):_nsommet(nsommet+2)
 {
@@ -210,4 +218,35 @@ int Graphe::earlyDate(int tache)
         return -1;
     }
 }
+
+int Graphe::latestDate(int tache)
+{
+    if(!detectCircuit())
+    {
+    vector<int> dates;
+    _dpta[_nsommet-1]= earlyDate(_nsommet -1);
+    for (int i(0);i<_nsommet;i++)
+    {
+        if(_MAdj[tache][i] == true && _dpta[i] != -1)
+            dates.push_back(_dpta[i] - _MVal[tache][i]);
+        else if(_MAdj[tache][i] == true && _dpta[i] == -1)
+        {
+            this->latestDate(i);
+            dates.push_back(_dpta[i] - _MVal[tache][i]);
+        }
+        else
+        {}
+       }
+    _dpta[tache] = min(dates);
+    return _dpta[tache];
+    }
+    else
+    {
+        std::cerr<<"il y'a un circuit"<<std::endl;
+        return -1;
+    }
+    
+}
+
+
 

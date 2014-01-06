@@ -37,7 +37,7 @@ public:
     void print_graph();
 
     int earlyDate(int tache);
-
+    int latestDate(int tache);
 };
 
 #endif /* defined(__projet_graphe__graphe__) */

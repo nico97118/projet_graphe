@@ -21,8 +21,9 @@ int main(int argc, const char * argv[])
     Graphe ordo(&source);
     ordo.detectCircuit();
     ordo.print_graph();
-    cout<<ordo.earlyDate(4);
-
+    cout<<"date au plus tot de fin de projet :"<<ordo.earlyDate(4)<<endl;
+    cout<<"date au plus tard : "<<ordo.latestDate(1);
+    
     
     return 0;
 }
