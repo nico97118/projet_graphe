@@ -46,3 +46,22 @@ bool Graphe::detectCircuit() const {
     
     return circuit;             // on retourne le booléen (circuit or not)
 }
+
+void Graphe::print_graph(){
+	int i,j;
+	for(i=0;i<this->_nsommet;i++)  //affichage du graphe pour verifier qu'il est bien en mémoire.
+    {
+        for(j=0;j<this->_nsommet;j++)
+            
+        {
+			if(this->_MAdj[i][j] == true) {
+                std::cout<<" "<<this->_MVal[i][j]<<" ";
+            }
+			else {
+                std::cout<<" X ";
+
+            }
+        }
+        std::cout<<std::endl;
+    }
+}

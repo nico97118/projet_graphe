@@ -23,6 +23,7 @@ public:
     Graphe();
     
     bool detectCircuit() const;
+    void print_graph();
 };
 
 #endif /* defined(__projet_graphe__graphe__) */
