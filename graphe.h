@@ -21,7 +21,8 @@ protected:
     
 public:
     Graphe();
-    Graphe(fstream
+    
+    bool detectCircuit() const;
 };
 
 #endif /* defined(__projet_graphe__graphe__) */
