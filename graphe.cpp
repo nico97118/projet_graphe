@@ -210,7 +210,6 @@ int Graphe::earlyDate(int tache)
         
     }
     _dpt[tache] = max(dates);
-    _dpta[tache] = _dpt[tache];
     return _dpt[tache];
     }
     else
@@ -225,21 +224,23 @@ int Graphe::latestDate(int tache)
     if(!detectCircuit())
     {
     vector<int> dates;
-    _dpta[_nsommet-1]= earlyDate(_nsommet -1);
+    _dpta[_nsommet-1]= earlyDate(_nsommet );
     for (int i(0);i<_nsommet;i++)
     {
         if(_MAdj[tache][i] == true && _dpta[i] != -1)
-            dates.push_back(_dpta[i] - _MVal[tache][i]);
+        {dates.push_back(_dpt[i] - _MVal[tache][i]);}
         else if(_MAdj[tache][i] == true && _dpta[i] == -1)
         {
             this->latestDate(i);
-            dates.push_back(_dpta[i] - _MVal[tache][i]);
+            dates.push_back(_dpt[i] - _MVal[tache][i]);
         }
         else
         {}
        }
     _dpta[tache] = min(dates);
+    _dpta[_nsommet-1]= _dpt[_nsommet-1];
     return _dpta[tache];
+    
     }
     else
     {
@@ -264,7 +265,7 @@ void Graphe::print_dpta()
     std::cout<<"Dates(de debut) au plus tard pour les taches : "<<std::endl;
     for(int i(1);i<_nsommet-1;i++)
         std::cout<<"    tache "<<i<<" : "<<_dpta[i]<<std::endl;
-    std::cout<<"La date au plus tard de fin de projet est : "<<_dpt[_nsommet-1]<<" (selon l'énoncé  := date au plus tot)."<<std::endl;
+    std::cout<<"La date au plus tard de fin de projet est : "<<_dpta[_nsommet-1]<<" (selon l'énoncé  := date au plus tot)."<<std::endl;
 }
 
 
