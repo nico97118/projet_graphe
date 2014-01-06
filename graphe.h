@@ -12,18 +12,29 @@
 #include <iostream>
 #include <fstream>
 
+using namespace std;
+
 class Graphe{
 protected:
     int _nsommet;
     int * _duree;
     bool ** _MAdj;
-    bool ** _MVal;
+    int ** _MVal;
     
 public:
-    Graphe();
+    Graphe(int nsom);
+    Graphe(ifstream *source);
+    
+    void addConstraint(int sommet, int constraint);
+    void removeConstraint(int sommet, int constraint);
+    bool verifyConstraint(int sommet, int constraint)
+    { return _MAdj[sommet][constraint]; }
     
     bool detectCircuit() const;
+
     void print_graph();
+
+
 };
 
 #endif /* defined(__projet_graphe__graphe__) */

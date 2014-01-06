@@ -7,14 +7,22 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include "graphe.h"
+
 
 using namespace std;
-
-
-
-
 int main(int argc, const char * argv[])
 {
+    
+    
+    ifstream source("donnees.txt", ios::in);
+    
+    Graphe ordo(&source);
+    ordo.detectCircuit();
+    ordo.print_graph();
+    
+
     
     return 0;
 }

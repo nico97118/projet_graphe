@@ -8,12 +8,103 @@
 
 #include "graphe.h"
 
+Graphe::Graphe(int nsommet):_nsommet(nsommet+2)
+{
+    _MAdj = new bool*[nsommet];
+    _MVal = new int*[nsommet];
+    _duree = new int[nsommet];
+    for(int i(0);i<nsommet;i++)
+    {
+        _MAdj[i] = new bool[nsommet];
+        _MVal[i] = new int[nsommet];
+    }
+    
+    for(int i(0);i<nsommet;i++)
+        for(int j(0);j<nsommet;j++)
+        {
+            _MAdj[i][j] = false;
+            _MVal[i][j] = 0;
+        }
+    
+}
 
-
+Graphe::Graphe(ifstream *source)
+{
+    *source>>_nsommet;
+    _nsommet+= 2;
+    
+    _MAdj = new bool*[_nsommet];
+    _MVal = new int*[_nsommet];
+    _duree = new int[_nsommet];
+    for(int i(0);i<_nsommet;i++)
+    {
+        _MAdj[i] = new bool[_nsommet];
+        _MVal[i] = new int[_nsommet];
+    }
+    
+    for(int i(0);i<_nsommet;i++)
+        for(int j(0);j<_nsommet;j++)
+        {
+            _MAdj[i][j] = false;
+            _MVal[i][j] = 0;
+        }
+    
+    int sommet,contrainte;
+    
+    *source>>sommet;
+    while(sommet != -1)
+    {
+        *source>>_duree[sommet];
+        
+        *source>>contrainte;
+        if (contrainte == -1)
+        {
+            _MAdj[0][sommet] = true;
+            _MVal[0][sommet] = 0;
+        }
+        else{
+            
+        
+        while(contrainte != -1)
+        {
+            _MAdj[contrainte][sommet] = true;
+            //std::cout<<"("<<sommet<<" -> "<<contrainte<<" = "<<_duree[sommet]<<" : "<<_MVal[sommet][contrainte]<<" : "<<_MAdj[sommet][contrainte]<<" )"<<std::endl;
+            *source>>contrainte;
+        }
+        }
+        *source>>sommet;
+    }
+        //on remplit MVal avec les durées
+        for (int i(0);i<_nsommet;i++)
+            for(int j(0);j<_nsommet;j++)
+            {
+                _MVal[i][j] = _duree[i];
+            }
+    
+    
+    for(int i(0);i<_nsommet;i++)
+    {
+        bool final = true;
+        for( int j(0);j<_nsommet;j++)
+        {
+            if(_MAdj[i][j] == true)
+                final = false;
+   
+        }
+        if(final == true)
+            _MAdj[i][_nsommet-1] = true;
+    }
+    
+}
 
 bool Graphe::detectCircuit() const {
     int i,x,y,z;
     bool circuit = false;
+    bool Mc [_nsommet][_nsommet]; //matrice de fermture transitive.
+    
+    for(int i(0);i<_nsommet;i++)
+        for(int j(0);j<_nsommet;j++)
+            Mc[i][j] = false;       //init. de la matrice a false;
     
     for(x=0;x<this->_nsommet;x++)
     {
@@ -21,13 +112,12 @@ bool Graphe::detectCircuit() const {
         {
             for(z=0;z<this->_nsommet;z++)
             {
-                std::cout << "-> " << x << ", " << y << ", " << z << std::endl;
-                std::cout << "{" <<this->_MAdj[x][y]<<" , " << this->_MAdj[y][z] << "}" << std::endl;
+                //std::cout << "-> " << x << ", " << y << ", " << z << std::endl;
+               // std::cout << "{" <<this->_MAdj[x][y]<<" , " << this->_MAdj[y][z] << "}" << std::endl;
                 
                 if (this->_MAdj[x][y]==1 && this->_MAdj[y][z]==1)       // si x->y existe et y->z existe
                 {
-                    this->_MAdj[x][z] = true;                //alors x->z existe
-                    this->_MVal[x][z] = this->_MVal[x][y] + this->_MVal[y][z];
+                    Mc[x][z] = true;                //alors x->z existe
                 }
             }
         }
@@ -35,12 +125,12 @@ bool Graphe::detectCircuit() const {
     
     for(i=0;i<this->_nsommet;i++)
     {
-        if (this->_MAdj[i][i])       //après avoir fait la fermeture transitive on regarde la diago
+        if (Mc[i][i] == true)       //après avoir fait la fermeture transitive on regarde la diago
             circuit = true;     // si il y'a un true sur la diago (MAdj) alors il y'a un circuit.
     }
     
     if(circuit==true)
-        std::cout<< " CIIIIIRCUIIIIIIIIT" << std::endl;
+        std::cout<< "Circuit" << std::endl;
     else
         std::cout << "PAS DE CIRCUIT" << std::endl;
     
@@ -48,20 +138,26 @@ bool Graphe::detectCircuit() const {
 }
 
 void Graphe::print_graph(){
-	int i,j;
-	for(i=0;i<this->_nsommet;i++)  //affichage du graphe pour verifier qu'il est bien en mémoire.
+	for(int i(0);i<_nsommet;i++)
     {
-        for(j=0;j<this->_nsommet;j++)
-            
+        for(int j(0);j<_nsommet;j++)
         {
-			if(this->_MAdj[i][j] == true) {
-                std::cout<<" "<<this->_MVal[i][j]<<" ";
-            }
-			else {
-                std::cout<<" X ";
-
-            }
+            if(_MAdj[i][j])
+                std::cout<<_MVal[i][j]<<" ";
+            else
+                std::cout<<"X ";
         }
         std::cout<<std::endl;
+        
     }
+}
+
+void Graphe::addConstraint(int sommet, int constraint)
+{
+    _MAdj[constraint][sommet] = true;
+}
+
+void Graphe::removeConstraint(int sommet, int constraint)
+{
+    _MAdj[constraint][sommet] = false;
 }
