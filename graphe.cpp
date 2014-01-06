@@ -7,20 +7,32 @@
 //
 
 #include "graphe.h"
+#include <vector>
+
+int max(vector<int> valeurs)
+{
+    int max = 0;
+    for(vector<int>::iterator it(valeurs.begin());it != valeurs.end();it++)
+        if(*it >= max)
+            max = *it;
+    return max;
+}
 
 Graphe::Graphe(int nsommet):_nsommet(nsommet+2)
 {
-    _MAdj = new bool*[nsommet];
-    _MVal = new int*[nsommet];
-    _duree = new int[nsommet];
-    for(int i(0);i<nsommet;i++)
+    _MAdj = new bool*[_nsommet];
+    _MVal = new int*[_nsommet];
+    _duree = new int[_nsommet];
+    _dpt = new int[_nsommet];
+    _dpta = new int[_nsommet];
+    for(int i(0);i<_nsommet;i++)
     {
-        _MAdj[i] = new bool[nsommet];
-        _MVal[i] = new int[nsommet];
+        _MAdj[i] = new bool[_nsommet];
+        _MVal[i] = new int[_nsommet];
     }
     
-    for(int i(0);i<nsommet;i++)
-        for(int j(0);j<nsommet;j++)
+    for(int i(0);i<_nsommet;i++)
+        for(int j(0);j<_nsommet;j++)
         {
             _MAdj[i][j] = false;
             _MVal[i][j] = 0;
@@ -36,11 +48,20 @@ Graphe::Graphe(ifstream *source)
     _MAdj = new bool*[_nsommet];
     _MVal = new int*[_nsommet];
     _duree = new int[_nsommet];
+    _dpt = new int[_nsommet];
+    _dpta = new int [_nsommet];
+    
     for(int i(0);i<_nsommet;i++)
     {
+        _duree[i] = 0;
+        _dpt[i] = -1;
+        _dpta[i] = -1;
+        
         _MAdj[i] = new bool[_nsommet];
         _MVal[i] = new int[_nsommet];
     }
+    
+    _dpt[0]=0;
     
     for(int i(0);i<_nsommet;i++)
         for(int j(0);j<_nsommet;j++)
@@ -82,7 +103,7 @@ Graphe::Graphe(ifstream *source)
             }
     
     
-    for(int i(0);i<_nsommet;i++)
+    for(int i(0);i<_nsommet-1;i++)
     {
         bool final = true;
         for( int j(0);j<_nsommet;j++)
@@ -129,10 +150,10 @@ bool Graphe::detectCircuit() const {
             circuit = true;     // si il y'a un true sur la diago (MAdj) alors il y'a un circuit.
     }
     
-    if(circuit==true)
-        std::cout<< "Circuit" << std::endl;
-    else
-        std::cout << "PAS DE CIRCUIT" << std::endl;
+    // if(circuit==true)
+      //  std::cout<< "Circuit" << std::endl;
+   // else
+       // std::cout << "PAS DE CIRCUIT" << std::endl;
     
     return circuit;             // on retourne le booléen (circuit or not)
 }
@@ -161,3 +182,32 @@ void Graphe::removeConstraint(int sommet, int constraint)
 {
     _MAdj[constraint][sommet] = false;
 }
+
+int Graphe::earlyDate(int tache)
+{
+    if (!detectCircuit())
+    {
+    vector<int> dates;
+    for(int i(0);i<_nsommet;i++)
+    {
+        if(_MAdj[i][tache] == true && _dpt[i] != -1)
+            dates.push_back(_MVal[i][tache] +_dpt[i]);
+        else if(_MAdj[i][tache] == true && _dpt[i] == -1)
+        {
+            this->earlyDate(i);
+            dates.push_back(_MVal[i][tache] +_dpt[i]);
+        }
+        else
+        {}
+        
+    }
+    _dpt[tache] = max(dates);
+    return _dpt[tache];
+    }
+    else
+    {
+        std::cerr<<"il y'a un circuit."<<std::endl;
+        return -1;
+    }
+}
+

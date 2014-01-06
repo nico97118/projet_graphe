@@ -20,6 +20,8 @@ protected:
     int * _duree;
     bool ** _MAdj;
     int ** _MVal;
+    int * _dpt;
+    int * _dpta;
     
 public:
     Graphe(int nsom);
@@ -34,6 +36,7 @@ public:
 
     void print_graph();
 
+    int earlyDate(int tache);
 
 };
 
