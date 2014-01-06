@@ -38,6 +38,8 @@ public:
 
     int earlyDate(int tache);
     int latestDate(int tache);
+    void print_dpt();
+    void print_dpta();
 };
 
 #endif /* defined(__projet_graphe__graphe__) */
