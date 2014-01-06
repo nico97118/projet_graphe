@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <iomanip>
 
 using namespace std;
 
@@ -21,12 +20,8 @@ protected:
     int * _duree;
     bool ** _MAdj;
     int ** _MVal;
-<<<<<<< HEAD
-    int* _dpta;
-=======
     int * _dpt;
     int * _dpta;
->>>>>>> 5283bc43037d8e8280afbece881fbc59cfe4f6b9
     
 public:
     Graphe(int nsom);

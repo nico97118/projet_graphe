@@ -164,9 +164,9 @@ void Graphe::print_graph(){
         for(int j(0);j<_nsommet;j++)
         {
             if(_MAdj[i][j])
-                std::cout << setw(2) << _MVal[i][j] <<" ";
+                std::cout<<_MVal[i][j]<<" ";
             else
-                std::cout<< " X ";
+                std::cout<<"X ";
         }
         std::cout<<std::endl;
         
@@ -183,18 +183,6 @@ void Graphe::removeConstraint(int sommet, int constraint)
     _MAdj[constraint][sommet] = false;
 }
 
-<<<<<<< HEAD
-int dateAuPlusTard(int etape, int pTot) {
-    int dpta = 0; // date au plus tard
-    int dpto = pTot; //valeur de date au plus tot (6O pour le graphe present)
-    
-    
-    
-    
-    
-    return dpta;
-}
-=======
 int Graphe::earlyDate(int tache)
 {
     if (!detectCircuit())
@@ -223,4 +211,3 @@ int Graphe::earlyDate(int tache)
     }
 }
 
->>>>>>> 5283bc43037d8e8280afbece881fbc59cfe4f6b9
